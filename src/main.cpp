@@ -37,9 +37,6 @@ int main()
 
 	Window mainWindow(SCR_WIDTH, SCR_HEIGHT,"Sandbox");
 	mainWindow.SetActive();
-	
-	Shader sh("../res/Shaders");
-	sh.CreateProgram();
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -47,16 +44,33 @@ int main()
 		return -1;
 	}
 
+	Shader sh("../res/Shaders/");
+	sh.CreateProgram();
+
 	float boxVertices[] = {
-		-1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,	//0
-		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,	//1	
-		-0.7f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,	//2
-		-0.7f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f	//3
+		0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,	//0
+		-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,	//1	
+		0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,	//2
 	};
+
+	uint VAO;
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+	uint VBO;
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(boxVertices), boxVertices, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (const void*)0);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (const void*)(sizeof(float)*3));
+	glEnableVertexAttribArray(1);
 
 	while (!mainWindow.ShouldCloseWindow())
 	{
 		mainWindow.SetColor(1, 1, 1, 1);
+		sh.UseProgram();
+
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		mainWindow.SwapFrameBuffer();
 		glfwPollEvents();
