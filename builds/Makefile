@@ -9,11 +9,11 @@ LINKER_WIN = -L. .././includes/lib/win/libglfw3dll.a
 DIR_OFF = .././src/
 ASSEMBLE_CMD = 	${CXX} ${CFLAGS} -c
 	
-FILE_DEPENDENCIES = main.o glad.o Shader.o Window.o
+FILE_DEPENDENCIES = main.obj glad.obj Shader.obj Window.obj
 
 # Short hand for combining all the object file into one executable form
-WIN_COMMAND = ${CXX} ${CFLAGS} -o ${BUILD_NAME} ${OBJ_PATH}/*.o ${INC_PATH} ${LINKER_WIN}
-MAC_COMMAND = ${CXX} ${CFLAGS} -o ${BUILD_NAME} ${OBJ_PATH}/*.o ${INC_PATH} ${LINKER_MAC}
+WIN_COMMAND = ${CXX} ${CFLAGS} -o ${BUILD_NAME} ${OBJ_PATH}/*.obj ${INC_PATH} ${LINKER_WIN}
+MAC_COMMAND = ${CXX} ${CFLAGS} -o ${BUILD_NAME} ${OBJ_PATH}/*.obj ${INC_PATH} ${LINKER_MAC}
 
 win_m: ${FILE_DEPENDENCIES}
 	${WIN_COMMAND}
@@ -21,14 +21,17 @@ win_m: ${FILE_DEPENDENCIES}
 mac_m: ${FILE_DEPENDENCIES}
 	${MAC_COMMAND}
 
-main.o: ${DIR_OFF}main.cpp
-	${ASSEMBLE_CMD} -o ${OBJ_PATH}/main.o ${DIR_OFF}main.cpp
+main.obj: ${DIR_OFF}main.cpp
+	${ASSEMBLE_CMD} -o ${OBJ_PATH}/main.obj ${DIR_OFF}main.cpp
 
-glad.o: ${DIR_OFF}glad.cpp
-	${ASSEMBLE_CMD} -o ${OBJ_PATH}/glad.o ${DIR_OFF}glad.cpp
+glad.obj: ${DIR_OFF}glad.cpp
+	${ASSEMBLE_CMD} -o ${OBJ_PATH}/glad.obj ${DIR_OFF}glad.cpp
 
-Shader.o: ${DIR_OFF}Helpers/Shader.cpp ${DIR_OFF}Helpers/Shader.h
-	${ASSEMBLE_CMD} -o ${OBJ_PATH}/Shader.o ${DIR_OFF}Helpers/Shader.cpp
+Shader.obj: ${DIR_OFF}Helpers/Shader.cpp ${DIR_OFF}Helpers/Shader.h
+	${ASSEMBLE_CMD} -o ${OBJ_PATH}/Shader.obj ${DIR_OFF}Helpers/Shader.cpp
 
-Window.o: ${DIR_OFF}Helpers/Window.cpp ${DIR_OFF}Helpers/Window.h
-	${ASSEMBLE_CMD} -o ${OBJ_PATH}/Window.o ${DIR_OFF}Helpers/Window.cpp
+Window.obj: ${DIR_OFF}Helpers/Window.cpp ${DIR_OFF}Helpers/Window.h
+	${ASSEMBLE_CMD} -o ${OBJ_PATH}/Window.obj ${DIR_OFF}Helpers/Window.cpp
+
+clean:
+	rm -f *.obj
