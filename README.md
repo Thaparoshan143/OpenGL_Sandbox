@@ -22,9 +22,9 @@ Before using this few key points is to be known about folder hierarchical struct
   <li>Clone the project <code> git clone https://github.com/Thaparoshan143/OpenGL_Sandbox</code></li>
   <li>Change the code as per need with entry point at main.cpp</li>
   <li>Makefile is used for the compiling and running so, Change the working directory to builds (to use makefile for compiling) in terminal (VScode)</li>
-  <li>type command in terminal : <code>make mac_m</code> - for mac and <code>make win_m</code> - for windows</li>
-  <li>run test</li>
+  <li>type command in terminal : <code>make build_m</code>(Platform will be auto detected by Makefile)</li>
+  <li>Then run test (is inside build/Exe/)</li>
 </ul>
 
-<h3># Warning: This boiler is made using mac system. Few things might need change eg: -</h3>
+<h3># Warning: This boiler is made using mac system (M1). Few things might need change on other patform eg: -</h3>
 <li>directory change with / -> \</li> and few more..

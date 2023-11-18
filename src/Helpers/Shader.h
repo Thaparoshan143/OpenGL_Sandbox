@@ -9,6 +9,7 @@
 #include"../../includes/GLFW/glfw3.h"
 
 typedef std::string str;
+typedef unsigned int uint;
 
 namespace Sandbox
 {

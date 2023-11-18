@@ -7,6 +7,7 @@
 #include<map>
 
 typedef std::string str;
+typedef unsigned int uint;
 
 namespace Sandbox
 {

@@ -8,6 +8,9 @@
 
 using namespace Sandbox;
 
+// Draw mod defines wether to draw triangle (1) or quad (0) using array method..
+#define DRAW_MOD 1
+
 bool initializeGLFW()
 {
 	glfwInit();
@@ -47,11 +50,23 @@ int main()
 	Shader sh("../res/Shaders/");
 	sh.CreateProgram();
 
-	float boxVertices[] = {
+	float triangleVerts[] = {
 		0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,	//0
 		-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,	//1	
 		0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,	//2
 	};
+
+	float quadVerts[] = {
+	0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,	//0
+	0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,	//1	
+	-0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,	//2
+	0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,	//3
+	-0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,	//4
+	-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,	//5
+	};
+
+	float *Vertices = DRAW_MOD ? triangleVerts  : quadVerts;
+	int verticesSize = (DRAW_MOD ? 18 : 36) * sizeof(float); 
 
 	uint VAO;
 	glGenVertexArrays(1, &VAO);
@@ -59,7 +74,7 @@ int main()
 	uint VBO;
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(boxVertices), boxVertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, verticesSize, Vertices, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (const void*)0);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (const void*)(sizeof(float)*3));
@@ -70,7 +85,7 @@ int main()
 		mainWindow.SetColor(1, 1, 1, 1);
 		sh.UseProgram();
 
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLES, 0, DRAW_MOD ? 3 : 6);
 
 		mainWindow.SwapFrameBuffer();
 		glfwPollEvents();
