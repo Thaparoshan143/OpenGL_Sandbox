@@ -1,15 +1,16 @@
-
 CXX = g++ --std=c++11
 CFLAGS = -Wall
 BUILD_NAME = ./Exe/test
 OBJ_PATH = .
-INC_PATH = -I./includes
-LINKER_MAC = -L. .././includes/lib/mac/libglfw.3.3.dylib
-LINKER_WIN = -L. .././includes/lib/win/libglfw3dll.a
-DIR_OFF = .././src/
-ASSEMBLE_CMD = 	${CXX} ${CFLAGS} -c
+INC_PATH = -I .././includes -I .././includes/freetypeinc -I .././includes/freetypeinc/freetype
+LINKER_MAC = -L. .././lib/mac/libglfw.3.3.dylib -L. .././lib/mac/libfreetype.6.dylib
+LINKER_WIN = -L. .././lib/win/libglfw3dll.a -L. .././lib/win/libfreetype.dll.a
+PLATFORM_DIR_OFF = ../Platform/OpenGL/
+SANDBOX_DIR_OFF = ../Sandbox/
+UTIL_DIR_OFF = ../Util/
 	
 UNAME_S := $(shell uname -s)
+ASSEMBLE_CMD = 	${CXX} ${CFLAGS} -c
 
 ifeq ($(UNAME_S), Linux) #LINUX
 	ECHO_MESSAGE = "Linux"
@@ -23,7 +24,8 @@ ifeq ($(OS), Windows_NT) #WINDOWS
 	ECHO_MESSAGE = "Windows"
 endif
 
-FILE_DEPENDENCIES = main.obj glad.obj Shader.obj Window.obj
+FILE_DEPENDENCIES = main.obj glad.obj OpenGL_Shader.obj OpenGL_Window.obj OpenGL_App.obj Util.obj
+# FILE_DEPENDENCIES = main.obj glad.obj OpenGL_Shader.obj OpenGL_Window.obj 
 
 # Short hand for combining all the object file into one executable form
 WIN_COMMAND = ${CXX} ${CFLAGS} -o ${BUILD_NAME} ${OBJ_PATH}/*.obj ${INC_PATH} ${LINKER_WIN}
@@ -36,17 +38,24 @@ else
 	$(WIN_COMMAND)
 endif
 
-main.obj: ${DIR_OFF}main.cpp
-	${ASSEMBLE_CMD} -o ${OBJ_PATH}/main.obj ${DIR_OFF}main.cpp
+main.obj: ${SANDBOX_DIR_OFF}main.cpp
+	${ASSEMBLE_CMD} -o ${OBJ_PATH}/main.obj ${SANDBOX_DIR_OFF}main.cpp
 
-glad.obj: ${DIR_OFF}glad.cpp
-	${ASSEMBLE_CMD} -o ${OBJ_PATH}/glad.obj ${DIR_OFF}glad.cpp
+glad.obj: ${SANDBOX_DIR_OFF}glad.cpp
+	${ASSEMBLE_CMD} -o ${OBJ_PATH}/glad.obj ${SANDBOX_DIR_OFF}glad.cpp
 
-Shader.obj: ${DIR_OFF}Helpers/Shader.cpp ${DIR_OFF}Helpers/Shader.h
-	${ASSEMBLE_CMD} -o ${OBJ_PATH}/Shader.obj ${DIR_OFF}Helpers/Shader.cpp
+OpenGL_Shader.obj: ${PLATFORM_DIR_OFF}OpenGL_Shader.cpp ${PLATFORM_DIR_OFF}OpenGL_Shader.h
+	${ASSEMBLE_CMD} -o ${OBJ_PATH}/OpenGL_Shader.obj ${PLATFORM_DIR_OFF}OpenGL_Shader.cpp
 
-Window.obj: ${DIR_OFF}Helpers/Window.cpp ${DIR_OFF}Helpers/Window.h
-	${ASSEMBLE_CMD} -o ${OBJ_PATH}/Window.obj ${DIR_OFF}Helpers/Window.cpp
+OpenGL_Window.obj: ${PLATFORM_DIR_OFF}OpenGL_Window.cpp ${PLATFORM_DIR_OFF}OpenGL_Window.h
+	${ASSEMBLE_CMD} -o ${OBJ_PATH}/OpenGL_Window.obj ${PLATFORM_DIR_OFF}OpenGL_Window.cpp
+
+OpenGL_App.obj: ${PLATFORM_DIR_OFF}OpenGL_App.cpp ${PLATFORM_DIR_OFF}OpenGL_App.h
+	${ASSEMBLE_CMD} -o ${OBJ_PATH}/OpenGL_App.obj ${PLATFORM_DIR_OFF}OpenGL_App.cpp
+
+
+Util.obj: ${UTIL_DIR_OFF}*.cpp
+	${ASSEMBLE_CMD} -o ${OBJ_PATH}/Util.obj ${UTIL_DIR_OFF}*.cpp
 
 clean:
 ifeq (${UNAME_S}, Darwin)
