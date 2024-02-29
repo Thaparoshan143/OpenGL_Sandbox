@@ -5,18 +5,18 @@
 
 #include"./Types.h"
 
-namespace Abs
+namespace Interface
 {
-	class Shader
+	class IShader
 	{
 		public:
-		Shader(String path = "../res/Shaders/") {	m_dirPath = path;	}
+		IShader(String path = "../res/Shaders/") {	m_dirPath = path;	}
 
 		virtual uint CreateProgram() = 0;
-		void UpdatePath(String path) {	m_dirPath = path;	};
-		inline uint GetProgramID() {	return m_programID;	};
 		virtual void DeleteProgram() = 0;
 		virtual void UseProgram() = 0;
+		void SetPath(String path) {	m_dirPath = path;	};
+		inline uint GetProgramID() {	return m_programID;	};
 
 		protected:
 		String m_dirPath;

@@ -14,7 +14,9 @@ typedef glm::dvec3 dVec3;
 typedef glm::fvec3 fVec3;
 typedef glm::dvec4 dVec4;
 typedef glm::fvec4 fVec4;
-typedef dVec3 Color;
+
+typedef fVec3 Color3;
+typedef fVec4 Color4;
 
 typedef glm::mat4 Mat4;
 typedef glm::fmat4 fMat4;
