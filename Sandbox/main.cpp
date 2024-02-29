@@ -5,12 +5,15 @@
 
 #include"../Platform/OpenGL/OpenGL_Shader.h"
 #include"../Platform/OpenGL/OpenGL_Window.h"
-#include"../Platform/OpenGL/OpenGL_App.h"
+#include"../Platform/OpenGL/OpenGL_Application.h"
+
+#define TESTMODE
+#include"../Util/VertexGenerator.cpp"
 
 using namespace OpenGL;
 using Window = OpenGL_Window;
 using Shader = OpenGL_Shader;
-using Application = OpenGL_App;
+using Application = OpenGL_Application;
 
 // Draw mod defines wether to draw triangle (1) or quad (0) using array method..
 #define DRAW_MOD 0
@@ -18,11 +21,11 @@ using Application = OpenGL_App;
 #define SCR_WIDTH 800
 #define SCR_HEIGHT 600
 
-class SandboxApp : OpenGL_App
+class SandboxApp : OpenGL_Application
 {
 	public:
-	SandboxApp(ApplicationInfo appInfo):OpenGL_App(appInfo) {}
-	~SandboxApp() {	}
+	SandboxApp(ApplicationInfo appInfo):OpenGL_Application(appInfo) {}
+	~SandboxApp() {		}
 
 	void Initialize() override 
 	{
@@ -31,20 +34,9 @@ class SandboxApp : OpenGL_App
 
 	void Loop() override 
 	{
-		float triangleVerts[] = {
-			0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,	//0
-			-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,	//1	
-			0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,	//2
-		};
+		float *triangleVerts = get_triangle_buffer(fVec2(0), fVec2(1), Color3(1.0, 0.5, 0.2));
 
-		float quadVerts[] = {
-			0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,	//0
-			0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,	//1	
-			-0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,	//2
-			0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,	//3
-			-0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,	//4
-			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,	//5
-		};
+		float *quadVerts = get_quad_buffer(fVec2(0), fVec2(1), Color3(1.0, 0.5, 0.2));
 
 		float *Vertices = DRAW_MOD ? triangleVerts  : quadVerts;
 		int verticesSize = (DRAW_MOD ? 18 : 36) * sizeof(float); 
@@ -61,16 +53,16 @@ class SandboxApp : OpenGL_App
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (const void*)(sizeof(float)*3));
 		glEnableVertexAttribArray(1);
 
-		Shader *temp = GetRawShader("../res/Shaders/");
+		Shader *temp = this->GetRawShader("../res/Shaders/");
 
-		while (!m_targetWindow->ShouldCloseWindow())
+		while (!m_window->ShouldCloseWindow())
 		{
-			m_targetWindow->SetColor(1, 1, 1);
+			m_window->SetColor(1, 1, 1, 1);
 			temp->UseProgram();	
 
 			glDrawArrays(GL_TRIANGLES, 0, DRAW_MOD ? 3 : 6);
 
-			m_targetWindow->SwapFrameBuffer();
+			m_window->SwapFrameBuffer();
 			glfwPollEvents();
 		}
 	}
