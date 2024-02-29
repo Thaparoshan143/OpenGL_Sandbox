@@ -24,8 +24,8 @@ ifeq ($(OS), Windows_NT) #WINDOWS
 	ECHO_MESSAGE = "Windows"
 endif
 
-FILE_DEPENDENCIES = main.obj glad.obj OpenGL_Shader.obj OpenGL_Window.obj OpenGL_App.obj Util.obj
-# FILE_DEPENDENCIES = main.obj glad.obj OpenGL_Shader.obj OpenGL_Window.obj 
+# FILE_DEPENDENCIES = main.obj glad.obj OpenGL_Shader.obj OpenGL_Window.obj OpenGL_Application.obj Util.obj
+FILE_DEPENDENCIES = main.obj glad.obj OpenGL_Shader.obj OpenGL_Window.obj OpenGL_Application.obj
 
 # Short hand for combining all the object file into one executable form
 WIN_COMMAND = ${CXX} ${CFLAGS} -o ${BUILD_NAME} ${OBJ_PATH}/*.obj ${INC_PATH} ${LINKER_WIN}
@@ -37,6 +37,8 @@ ifeq (${UNAME_S}, Darwin)
 else
 	$(WIN_COMMAND)
 endif
+
+build_clean: clean build_m
 
 main.obj: ${SANDBOX_DIR_OFF}main.cpp
 	${ASSEMBLE_CMD} -o ${OBJ_PATH}/main.obj ${SANDBOX_DIR_OFF}main.cpp
@@ -50,8 +52,8 @@ OpenGL_Shader.obj: ${PLATFORM_DIR_OFF}OpenGL_Shader.cpp ${PLATFORM_DIR_OFF}OpenG
 OpenGL_Window.obj: ${PLATFORM_DIR_OFF}OpenGL_Window.cpp ${PLATFORM_DIR_OFF}OpenGL_Window.h
 	${ASSEMBLE_CMD} -o ${OBJ_PATH}/OpenGL_Window.obj ${PLATFORM_DIR_OFF}OpenGL_Window.cpp
 
-OpenGL_App.obj: ${PLATFORM_DIR_OFF}OpenGL_App.cpp ${PLATFORM_DIR_OFF}OpenGL_App.h
-	${ASSEMBLE_CMD} -o ${OBJ_PATH}/OpenGL_App.obj ${PLATFORM_DIR_OFF}OpenGL_App.cpp
+OpenGL_Application.obj: ${PLATFORM_DIR_OFF}OpenGL_Application.cpp ${PLATFORM_DIR_OFF}OpenGL_Application.h
+	${ASSEMBLE_CMD} -o ${OBJ_PATH}/OpenGL_Application.obj ${PLATFORM_DIR_OFF}OpenGL_Application.cpp
 
 
 Util.obj: ${UTIL_DIR_OFF}*.cpp
