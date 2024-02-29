@@ -2,26 +2,16 @@
 
 namespace OpenGL
 {
-	OpenGL_Shader::OpenGL_Shader()
+	OpenGL_Shader::OpenGL_Shader(String path) : IShader(path)
 	{
 		m_programID = 0;
-	}
-
-	OpenGL_Shader::OpenGL_Shader(String path) : Shader(path)
-	{
-		m_programID = 0;
-	}
-
-	OpenGL_Shader::~OpenGL_Shader()
-	{
-		glDeleteProgram(this->m_programID);
 	}
 
 	uint OpenGL_Shader::CreateProgram()
 	{
-		if(this->m_programID!=0)
+		if(this->m_programID != 0)
 		{
-			std::cout << "Program already created!!" << std::endl;
+			std::cout << "Program already exist!!" << std::endl;
 			return this->m_programID;
 		}
 		else
@@ -50,10 +40,7 @@ namespace OpenGL
 
 	void OpenGL_Shader::UseProgram()
 	{
-		if(this->m_programID!=0)
-		glUseProgram(this->m_programID);
-		else
-		glUseProgram(this->CreateProgram());
+		this->m_programID != 0 ? glUseProgram(this->m_programID) : glUseProgram(this->CreateProgram());
 	}
 
 	void OpenGL_Shader::SetUniformInt(String name, int value)
@@ -74,7 +61,6 @@ namespace OpenGL
 		glUniform3f(location, value.r, value.g, value.b);
 	}
 
-
 	void OpenGL_Shader::SetUniformMat4(String name, fMat4 value)
 	{
 		uint location = queryUniformMapping(name);
@@ -85,7 +71,7 @@ namespace OpenGL
 	uint OpenGL_Shader::compileShader(uint t)
 	{
 		uint id = glCreateShader(t);
-		String s = (t==GL_VERTEX_SHADER)?parseShader("ver.shader"):parseShader("frag.shader");
+		String s = (t==GL_VERTEX_SHADER) ? parseShader("ver.shader") : parseShader("frag.shader");
 		const char *src = s.c_str();
 		glShaderSource(id, 1, &src ,NULL);
 		glCompileShader(id);
@@ -116,9 +102,14 @@ namespace OpenGL
 
 	uint OpenGL_Shader::queryUniformMapping(String name)
 	{
-		if(m_uniformList.count(name)==0)
+		if(m_uniformList.count(name) == 0)
 		{
 			uint location = glGetUniformLocation(m_programID, name.c_str());
+			if(location == -1)
+			{
+				std::cout << "Given Uniform named variable not found in Shader!!" << std::endl;
+				return location;
+			}
 			m_uniformList.insert({name, location});
 		}
 

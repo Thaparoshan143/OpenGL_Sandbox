@@ -3,7 +3,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-#include<map>
+#include <map>
 
 #include"../../includes/GLAD/glad.h"
 #include"../../includes/GLFW/glfw3.h"
@@ -12,13 +12,12 @@
 
 namespace OpenGL
 {
-	class OpenGL_Shader : public Abs::Shader
+	class OpenGL_Shader : public Interface::IShader
 	{
 		public:
-		OpenGL_Shader();
-		OpenGL_Shader(String path);
+		OpenGL_Shader(String path = "../res/Shaders/");
 
-		~OpenGL_Shader();
+		~OpenGL_Shader() {	DeleteProgram();	}
 
 		uint CreateProgram() override;
 		void DeleteProgram() override;
