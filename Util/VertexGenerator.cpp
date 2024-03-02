@@ -6,6 +6,7 @@
 
 #define TRIANGLE_VERTEX_COUNT 18
 #define QUAD_VERTEX_COUNT 36 // using two triangle method
+#define QUAD_IND_VERTEX_COUNT 24 // using Index method
 #define PER_VERTEX_MOD 6
 #define QUAD_INDEX_COUNT 6
 
@@ -72,6 +73,35 @@ uint* get_quad_index()
     *(temp+1) = *(temp+3) = 1;
     *(temp+2) = *(temp+4) = 2;
     *(temp+5) = 3;
+
+    return temp;
+}
+
+float* get_quad_bufferind(fVec2 pos, fVec2 dim, Color3 col)
+{
+    float *temp = new float[QUAD_IND_VERTEX_COUNT];
+    float hhei = dim.y/2.0;
+    float hwid = dim.x/2.0;
+    int i = 0;
+
+    *(temp+6*i) =  pos.x-hwid;
+    *(temp+6*i+1) =  pos.y-hhei;
+
+    *(temp+6*(++i)) = pos.x-hwid;
+    *(temp+6*i+1) = pos.y+hhei;
+
+    *(temp+6*(++i)) = pos.x+hwid;
+    *(temp+6*i+1) = pos.y-hhei;
+
+    *(temp+6*(++i)) =  pos.x+hwid;
+    *(temp+6*i+1) =  pos.y+hhei;
+
+    for(i=0;i<QUAD_IND_VERTEX_COUNT/PER_VERTEX_MOD;++i)
+    {
+        *(temp+6*i+3) = col.r;
+        *(temp+6*i+4) = col.g;
+        *(temp+6*i+5) = col.b;
+    }
 
     return temp;
 }

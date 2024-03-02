@@ -16,9 +16,6 @@ using Window = OpenGL_Window;
 using Shader = OpenGL_Shader;
 using Application = OpenGL_Application;
 
-// Draw mod defines wether to draw triangle (1) or quad (0) using array method..
-#define DRAW_MOD 0
-
 #define SCR_WIDTH 800
 #define SCR_HEIGHT 600
 
@@ -35,7 +32,7 @@ class SandboxApp : OpenGL_Application
 
 	void Loop() override 
 	{
-		float *quadVerts = get_quad_buffer(fVec2(0.5), fVec2(0.8), Color3(1.0, 0.5, 0.2));
+		float *quadVerts = get_quad_bufferind(fVec2(-0.5), fVec2(0.9), Color3(0.5, 1.0, 0.2));
 		uint *quadIBO = get_quad_index();
 
 		VertexArrayObject VAO(BufferLayout::PPP_RGB);
@@ -43,7 +40,7 @@ class SandboxApp : OpenGL_Application
 		IndexBufferObject IBO;
 		VAO.Bind();
 		IBO.PushData(quadIBO, 6);
-		VBO.PushData(quadVerts, 36);
+		VBO.PushData(quadVerts, 24);
 		VBO.OffloadData();
 		IBO.OffloadData();
 		VAO.SetVertexAttributePointer();
@@ -55,7 +52,7 @@ class SandboxApp : OpenGL_Application
 			m_window->SetColor(1, 1, 1, 1);
 			temp->UseProgram();	
 
-			glDrawElements(GL_TRIANGLES, 100, GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 			m_window->SwapFrameBuffer();
 			glfwPollEvents();
