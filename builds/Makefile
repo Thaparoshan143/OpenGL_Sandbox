@@ -25,7 +25,7 @@ ifeq ($(OS), Windows_NT) #WINDOWS
 endif
 
 # FILE_DEPENDENCIES = main.obj glad.obj OpenGL_Shader.obj OpenGL_Window.obj OpenGL_Application.obj Util.obj
-FILE_DEPENDENCIES = main.obj glad.obj OpenGL_Shader.obj OpenGL_Window.obj OpenGL_Application.obj
+FILE_DEPENDENCIES = main.obj glad.obj OpenGL_Shader.obj OpenGL_Window.obj OpenGL_Application.obj OpenGL_Buffer.obj
 
 # Short hand for combining all the object file into one executable form
 WIN_COMMAND = ${CXX} ${CFLAGS} -o ${BUILD_NAME} ${OBJ_PATH}/*.obj ${INC_PATH} ${LINKER_WIN}
@@ -54,6 +54,9 @@ OpenGL_Window.obj: ${PLATFORM_DIR_OFF}OpenGL_Window.cpp ${PLATFORM_DIR_OFF}OpenG
 
 OpenGL_Application.obj: ${PLATFORM_DIR_OFF}OpenGL_Application.cpp ${PLATFORM_DIR_OFF}OpenGL_Application.h
 	${ASSEMBLE_CMD} -o ${OBJ_PATH}/OpenGL_Application.obj ${PLATFORM_DIR_OFF}OpenGL_Application.cpp
+
+OpenGL_Buffer.obj: ${PLATFORM_DIR_OFF}OpenGL_Buffer.cpp ${PLATFORM_DIR_OFF}OpenGL_Buffer.h
+	${ASSEMBLE_CMD} -o ${OBJ_PATH}/OpenGL_Buffer.obj ${PLATFORM_DIR_OFF}OpenGL_Buffer.cpp
 
 
 Util.obj: ${UTIL_DIR_OFF}*.cpp
