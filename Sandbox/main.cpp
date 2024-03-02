@@ -6,6 +6,7 @@
 #include"../Platform/OpenGL/OpenGL_Shader.h"
 #include"../Platform/OpenGL/OpenGL_Window.h"
 #include"../Platform/OpenGL/OpenGL_Application.h"
+#include"../Platform/OpenGL/OpenGL_Buffer.h"
 
 #define TESTMODE
 #include"../Util/VertexGenerator.cpp"
@@ -34,24 +35,18 @@ class SandboxApp : OpenGL_Application
 
 	void Loop() override 
 	{
-		float *triangleVerts = get_triangle_buffer(fVec2(0), fVec2(1), Color3(1.0, 0.5, 0.2));
+		float *quadVerts = get_quad_buffer(fVec2(0.5), fVec2(0.8), Color3(1.0, 0.5, 0.2));
+		uint *quadIBO = get_quad_index();
 
-		float *quadVerts = get_quad_buffer(fVec2(0), fVec2(1), Color3(1.0, 0.5, 0.2));
-
-		float *Vertices = DRAW_MOD ? triangleVerts  : quadVerts;
-		int verticesSize = (DRAW_MOD ? 18 : 36) * sizeof(float); 
-
-		uint VAO;
-		glGenVertexArrays(1, &VAO);
-		glBindVertexArray(VAO);
-		uint VBO;
-		glGenBuffers(1, &VBO);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, verticesSize, Vertices, GL_STATIC_DRAW);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (const void*)0);
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (const void*)(sizeof(float)*3));
-		glEnableVertexAttribArray(1);
+		VertexArrayObject VAO(BufferLayout::PPP_RGB);
+		VertexBufferObject VBO;
+		IndexBufferObject IBO;
+		VAO.Bind();
+		IBO.PushData(quadIBO, 6);
+		VBO.PushData(quadVerts, 36);
+		VBO.OffloadData();
+		IBO.OffloadData();
+		VAO.SetVertexAttributePointer();
 
 		Shader *temp = this->GetRawShader("../res/Shaders/");
 
@@ -60,7 +55,7 @@ class SandboxApp : OpenGL_Application
 			m_window->SetColor(1, 1, 1, 1);
 			temp->UseProgram();	
 
-			glDrawArrays(GL_TRIANGLES, 0, DRAW_MOD ? 3 : 6);
+			glDrawElements(GL_TRIANGLES, 100, GL_UNSIGNED_INT, 0);
 
 			m_window->SwapFrameBuffer();
 			glfwPollEvents();
