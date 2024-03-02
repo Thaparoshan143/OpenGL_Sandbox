@@ -22,4 +22,5 @@ typedef glm::mat4 Mat4;
 typedef glm::fmat4 fMat4;
 
 typedef unsigned int uint;
+typedef unsigned char uchar;
 
