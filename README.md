@@ -2,7 +2,6 @@
 
 This is the boiler template for OpenGL. It contains the base needed for OpenGL to be up and running with few library packed, in <code>include</code> directory. 
 
-<code>
 <ul>
   <li>GLFW - OpenGL Context (for creating windows, handling inputs...)</li>
   <li>GLAD - OpenGL Loaders (to load openGL function pointers in ease)</li>
@@ -10,9 +9,18 @@ This is the boiler template for OpenGL. It contains the base needed for OpenGL t
   <li>Freetype - Text Loading Library (Glyph based)</li>
   <li>Stb - Image manipulation (reading, writing,...)</li>
 </ul>
-</code>
 
-<b>If only basic boiler required, use main branck</b> : https://github.com/Thaparoshan143/OpenGL_Sandbox
+##### #Note : For fresh (Apple silicon) make sure to install few dependencies from homebrew
+<code>brew install gcc</code>
+<code>brew install make</code>
+<code>brew install freetype</code>
+<code>brew install glfw</code>
+and also check if it is corretly installed in your system afterwards in terminal with commands
+<ul>
+<li><code>g++ --version</code></li>
+<li><code>make --version</code></li>
+</ul>
+
 <h2>Follow as :</h2>
 <ul>
   <li>Clone the project <code>git clone https://github.com/Thaparoshan143/OpenGL_Sandbox</code></li>
@@ -22,8 +30,10 @@ This is the boiler template for OpenGL. It contains the base needed for OpenGL t
   <li>Then run test (is inside builds/Exe/)</li>
 </ul>
 
-### Warning: This boiler is made using mac system (M1). Few things might need change on other patform eg: -
+<b>If only basic boiler required, use main branch</b> : https://github.com/Thaparoshan143/OpenGL_Sandbox
+
+#### Warning: This boiler is made using mac system (M1). Few things might need change on other patform eg: -
 <li>directory change with / -> \</li>
 <li>Few of the dll might be missing while .exe launch</li>
 
-<h5>Note: Dll should be in same folder as .exe (in window)<h5>
+<h5>Note: dll should be in same folder as .exe (in window)<h5>
