@@ -108,7 +108,7 @@ float* get_quad_bufferind(fVec2 pos, fVec2 dim, Color3 col)
 
 void print_float(float *data, uint count, char seperator='\n')
 {
-    for(int i=0;i<count;++i)
+    for(uint i=0;i<count;++i)
     {
         std::cout << *(data+i) << seperator;
     }
