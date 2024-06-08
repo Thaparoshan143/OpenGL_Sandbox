@@ -1,52 +1,41 @@
 
-CXX = g++ --std=c++11
-CFLAGS = -Wall
+CXX = g++
 BUILD_NAME = ./Exe/test
-OBJ_PATH = .
-INC_PATH = -I./includes
-LINKER_MAC = -L. .././includes/lib/mac/libglfw.3.3.dylib
-LINKER_WIN = -L. .././includes/lib/win/libglfw3dll.a
+INC_PATH = ./includes
+OBJ_DIR = ./
+CFLAGS = --std=c++11 -Wall $(foreach D, $(INC_PATH), -I$(D))
+LINKER_MAC = .././includes/lib/mac/libglfw.3.3.dylib
+LINKER_WIN = .././includes/lib/win/libglfw3dll.a
 DIR_OFF = .././src/
-ASSEMBLE_CMD = 	${CXX} ${CFLAGS} -c
-	
+HELPER_DIR_OFF = .././src/Helpers/
 UNAME_S := $(shell uname -s)
 
-ifeq ($(UNAME_S), Linux) #LINUX
-	ECHO_MESSAGE = "Linux"
-endif
-
-ifeq ($(UNAME_S), Darwin) #APPLE
-	ECHO_MESSAGE = "MAC OS"
-endif
-
-ifeq ($(OS), Windows_NT) #WINDOWS
-	ECHO_MESSAGE = "Windows"
-endif
-
-FILE_DEPENDENCIES = main.obj glad.obj Shader.obj Window.obj
+SRC_FILES = main glad
+HELPERS_FILES = $(wildcard $(HELPER_DIR_OFF)*.cpp)
 
 # Short hand for combining all the object file into one executable form
-WIN_COMMAND = ${CXX} ${CFLAGS} -o ${BUILD_NAME} ${OBJ_PATH}/*.obj ${INC_PATH} ${LINKER_WIN}
-MAC_COMMAND = ${CXX} ${CFLAGS} -o ${BUILD_NAME} ${OBJ_PATH}/*.obj ${INC_PATH} ${LINKER_MAC}
+WIN_COMMAND = ${CXX} ${CFLAGS} $(foreach D, $(LINKER_WIN), -L. $(D))
+MAC_COMMAND = ${CXX} ${CFLAGS} $(foreach D, $(LINKER_MAC), -L. $(D))
 
-build_m: ${FILE_DEPENDENCIES}
+SRC_OBJ = $(patsubst %.cpp, $(OBJ_DIR)%.obj, $(foreach D, $(SRC_FILES), $(D).cpp))
+HELPERS_OBJ = $(patsubst $(HELPER_DIR_OFF)%.cpp, $(OBJ_DIR)%.obj, $(HELPERS_FILES))
+
+build_m: ${BUILD_NAME}
+
+${BUILD_NAME} : ${SRC_OBJ} ${HELPERS_OBJ}
 ifeq (${UNAME_S}, Darwin)
-	${MAC_COMMAND}
+	${MAC_COMMAND} -o $@ $^ 
 else
-	$(WIN_COMMAND)
+	$(WIN_COMMAND) -o $@ $^ 
 endif
 
-main.obj: ${DIR_OFF}main.cpp
-	${ASSEMBLE_CMD} -o ${OBJ_PATH}/main.obj ${DIR_OFF}main.cpp
+${OBJ_DIR}%.obj: $(HELPER_DIR_OFF)%.cpp
+	$(CXX) $(CFLAGS) -c -o $@ $<
 
-glad.obj: ${DIR_OFF}glad.cpp
-	${ASSEMBLE_CMD} -o ${OBJ_PATH}/glad.obj ${DIR_OFF}glad.cpp
+${OBJ_DIR}%.obj: $(DIR_OFF)%.cpp
+	$(CXX) $(CFLAGS) -c -o $@ $<
 
-Shader.obj: ${DIR_OFF}Helpers/Shader.cpp ${DIR_OFF}Helpers/Shader.h
-	${ASSEMBLE_CMD} -o ${OBJ_PATH}/Shader.obj ${DIR_OFF}Helpers/Shader.cpp
-
-Window.obj: ${DIR_OFF}Helpers/Window.cpp ${DIR_OFF}Helpers/Window.h
-	${ASSEMBLE_CMD} -o ${OBJ_PATH}/Window.obj ${DIR_OFF}Helpers/Window.cpp
+clean_build: clean build_m
 
 clean:
 ifeq (${UNAME_S}, Darwin)
